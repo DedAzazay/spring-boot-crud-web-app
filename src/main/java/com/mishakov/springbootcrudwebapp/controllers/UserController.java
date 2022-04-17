@@ -5,12 +5,24 @@ import com.mishakov.springbootcrudwebapp.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
+
+import javax.validation.Valid;
 
 
-@RestController
+
+@Controller
+@RequestMapping("/users")
 public class UserController {
 
     private final UserServices userServices;
@@ -20,27 +32,53 @@ public class UserController {
         this.userServices = userServices;
     }
 
-    @PostMapping("/users")
-    public User saveUser(@RequestBody User user) {
-        return userServices.saveUser(user);
+    @GetMapping()
+    public String allUsers(Model model) {
+        model.addAttribute("users", userServices.userList());
+        return "/list";
     }
 
-    @GetMapping("/users")
-    public List<User> userList() {
-        return userServices.userList();
+    @GetMapping("/{id}")
+    public String oneUser(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("users", userServices.show(id));
+        return "/show";
     }
 
-    @PutMapping("/users/{id}")
-    public User updateUser(@RequestBody User user, @PathVariable("id") Long userId) {
-        return userServices.updateUser(user, userId);
+    @GetMapping("/new")
+    public String newUser(@ModelAttribute("user") User user) {
+        return "/new";
     }
 
-    @DeleteMapping("users/{id}")
-    public void deleteUserById(@PathVariable("id") Long userId) {
-        userServices.deleteUserById(userId);
+    @PostMapping()
+    public String createUser(@ModelAttribute("user") @Valid User user,
+                             BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "/new";
+        }
+        userServices.saveUser(user);
+        return "redirect:/users";
     }
 
+    @GetMapping("/{id}/edit")
+    public String editUser(Model model, @PathVariable("id") Long id) {
+        model.addAttribute("user", userServices.show(id));
+        return "/edit";
+    }
 
+    @PatchMapping("/{id}")
+    public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            return "/edit";
+        }
+        userServices.saveUser(user);
+        return "redirect:/users";
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteUser(@PathVariable("id") Long id) {
+        userServices.deleteUserById(id);
+        return "redirect:/users";
+    }
 
 
 }

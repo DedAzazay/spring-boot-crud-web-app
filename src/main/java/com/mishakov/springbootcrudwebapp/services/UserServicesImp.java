@@ -1,5 +1,6 @@
 package com.mishakov.springbootcrudwebapp.services;
 
+import com.mishakov.springbootcrudwebapp.dao.UserDao;
 import com.mishakov.springbootcrudwebapp.model.User;
 import com.mishakov.springbootcrudwebapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,38 +11,31 @@ import java.util.List;
 @Service
 public class UserServicesImp implements UserServices {
 
-    private UserRepository userRepository;
+    private UserDao userDao;
 
     @Autowired
-    public UserServicesImp(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserServicesImp(UserDao userRepository) {
+        this.userDao = userRepository;
     }
 
     @Override
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    public void saveUser(User user) {
+        userDao.saveUser(user);
     }
 
     @Override
     public List<User> userList() {
-        return userRepository.findAll();
+
+        return userDao.userList();
     }
 
     @Override
-    public User updateUser(User updateUser, Long userId) {
-        User user = userRepository.findById(userId).get();
-
-        //Check on "null" and empty values in future
-        user.setName(updateUser.getName());
-        user.setLastName(updateUser.getLastName());
-        user.setEmail(updateUser.getEmail());
-
-
-        return userRepository.save(user);
+    public User show(Long userId) {
+        return userDao.show(userId);
     }
 
     @Override
     public void deleteUserById(Long userId) {
-        userRepository.deleteById(userId);
+        userDao.deleteUserById(userId);
     }
 }

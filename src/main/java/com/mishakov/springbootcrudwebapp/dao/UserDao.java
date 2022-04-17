@@ -1,10 +1,10 @@
-package com.mishakov.springbootcrudwebapp.services;
+package com.mishakov.springbootcrudwebapp.dao;
 
 import com.mishakov.springbootcrudwebapp.model.User;
 
 import java.util.List;
 
-public interface UserServices {
+public interface UserDao {
 
     void saveUser(User user);
 
