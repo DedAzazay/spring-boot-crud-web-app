@@ -13,7 +13,7 @@
     <br/>
     <label for="lastName">Enter lastName: </label>
     <input type="text" th:field="*{lastName}" id="lastName"/>
-    <div style="color:red" th:if="${#fields.hasErrors('age')}" th:errors="*{lastName}">LastName Error</div>
+    <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">LastName Error</div>
     <br/>
     <label for="email">Enter email: </label>
     <input type="text" th:field="*{email}" id="email"/>
