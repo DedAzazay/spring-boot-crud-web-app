@@ -1,43 +1,39 @@
 package com.mishakov.springbootcrudwebapp.services;
 
-import com.mishakov.springbootcrudwebapp.repository.UserRepository;
+import com.mishakov.springbootcrudwebapp.dao.UserDao;
 import com.mishakov.springbootcrudwebapp.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class UserServicesImp implements UserServices {
 
-    private final UserRepository UserRepository;
+    private final UserDao userDao;
 
     @Autowired
-    public UserServicesImp(UserRepository userRepository) {
-        this.UserRepository = userRepository;
+    public UserServicesImp(UserDao userDao) {
+        this.userDao = userDao;
     }
 
     @Override
-    @Transactional
     public void saveUser(User user) {
-        UserRepository.save(user);
+        userDao.saveUser(user);
     }
 
     @Override
     public List<User> userList() {
-
-        return UserRepository.findAll();
+        return userDao.userList();
     }
 
     @Override
     public User show(Long userId) {
-        return UserRepository.findById(userId).get();
+        return userDao.show(userId);
     }
 
     @Override
-    @Transactional
     public void deleteUserById(Long userId) {
-        UserRepository.deleteById(userId);
+        userDao.deleteUserById(userId);
     }
 }
